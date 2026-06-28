@@ -20,6 +20,10 @@ body {
   font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
+body.modal-open {
+  overflow: hidden;
+}
+
 button,
 input {
   font: inherit;
@@ -29,6 +33,10 @@ button {
   border: 0;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
+}
+
+button:disabled {
+  cursor: not-allowed;
 }
 
 .app {
@@ -89,11 +97,11 @@ button {
 }
 
 .home-button {
-  bottom: 2.55%;
+  bottom: 5.2%;
 }
 
 .thanks-button {
-  bottom: 4.05%;
+  bottom: 5%;
   width: 82%;
 }
 
@@ -110,7 +118,7 @@ button {
   position: absolute;
   left: 22.3%;
   width: 55.3%;
-  height: 5.75%;
+  height: 4.95%;
 }
 
 .field label {
@@ -159,24 +167,28 @@ button {
 }
 
 .field-name {
-  top: 38.65%;
+  top: 49%;
+}
+
+.field-phone {
+  top: 55.3%;
 }
 
 .field-email {
-  top: 46.35%;
+  top: 61.6%;
 }
 
-.field-company {
-  top: 54.05%;
+.field-city {
+  top: 67.9%;
 }
 
-.field-position {
-  top: 61.78%;
+.field-specialty {
+  top: 74.2%;
 }
 
 .form-error {
   position: absolute;
-  top: 68.7%;
+  top: 80.3%;
   left: 22.5%;
   width: 55%;
   min-height: 1.6rem;
@@ -189,24 +201,11 @@ button {
 
 .form-button {
   left: 21%;
-  bottom: 23%;
+  bottom: 6.8%;
   width: 58%;
   height: 6.2%;
   min-height: 0;
   font-size: clamp(1.25rem, 4.8vw, 1.95rem);
-}
-
-.restart-button {
-  position: absolute;
-  right: 1rem;
-  bottom: 1rem;
-  width: 3rem;
-  height: 3rem;
-  border-radius: 0;
-  background: transparent;
-  color: transparent;
-  font-size: 0;
-  outline: none;
 }
 
 .sr-only {
@@ -219,6 +218,79 @@ button {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+
+.consent-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  width: 100vw;
+  min-height: 100dvh;
+  padding: 1rem;
+  background: rgba(42, 34, 28, 0.54);
+  color: var(--ink);
+  backdrop-filter: blur(4px);
+}
+
+.consent-modal[hidden] {
+  display: none;
+}
+
+.consent-card {
+  display: grid;
+  gap: 0.9rem;
+  width: min(88vw, 24rem);
+  margin: 0;
+  padding: 1.25rem;
+  border: 1px solid rgba(206, 126, 84, 0.35);
+  border-radius: 1.1rem;
+  background: rgba(255, 249, 242, 0.96);
+  box-shadow: 0 1rem 2.5rem rgba(44, 30, 20, 0.22);
+}
+
+.consent-card h2 {
+  margin: 0;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+.consent-card p {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.consent-option {
+  display: grid;
+  grid-template-columns: 1.15rem 1fr;
+  gap: 0.7rem;
+  align-items: start;
+  font-size: 0.9rem;
+  line-height: 1.35;
+}
+
+.consent-option input {
+  width: 1.05rem;
+  height: 1.05rem;
+  margin: 0.12rem 0 0;
+  accent-color: #cf6b46;
+}
+
+.consent-error {
+  min-height: 1.2rem;
+  color: var(--error);
+  font-weight: 600;
+}
+
+.consent-accept {
+  min-height: 2.75rem;
+  border-radius: 999px;
+  background: #d96942;
+  color: #fff9f2;
+  font-weight: 600;
 }
 
 @media (min-aspect-ratio: 943 / 1669) {

@@ -1,0 +1,34 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /registros/{document} {
+      allow create: if request.resource.data.keys().hasOnly([
+        'fullName',
+        'phone',
+        'email',
+        'city',
+        'specialty',
+        'privacyConsent',
+        'marketingConsent',
+        'consentAcceptedAt',
+        'privacyNoticeVersion',
+        'registeredAt',
+        'createdAt',
+        'source'
+      ])
+      && request.resource.data.fullName is string
+      && request.resource.data.phone is string
+      && request.resource.data.email is string
+      && request.resource.data.city is string
+      && request.resource.data.specialty is string
+      && request.resource.data.privacyConsent == true
+      && request.resource.data.marketingConsent is bool
+      && request.resource.data.consentAcceptedAt is string
+      && request.resource.data.privacyNoticeVersion is string
+      && request.resource.data.source == 'landing-sesderma';
+
+      allow read, update, delete: if false;
+    }
+  }
+}

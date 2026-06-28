@@ -46,6 +46,12 @@ Desde la carpeta del proyecto:
 npx.cmd firebase-tools deploy --only hosting
 ```
 
+Si cambian los campos del formulario, tambien despliega las reglas de Firestore:
+
+```powershell
+npx.cmd firebase-tools deploy --only firestore:rules
+```
+
 URL publica:
 
 ```text
@@ -69,9 +75,14 @@ registros
 Campos principales:
 
 - `fullName`
+- `phone`
 - `email`
-- `company`
-- `position`
+- `city`
+- `specialty`
+- `privacyConsent`
+- `marketingConsent`
+- `consentAcceptedAt`
+- `privacyNoticeVersion`
 - `registeredAt`
 - `createdAt`
 - `source`

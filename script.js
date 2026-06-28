@@ -10,8 +10,17 @@ import { firebaseConfig, registrationsCollection } from "./firebase-config.js";
 const screens = [...document.querySelectorAll("[data-screen]")];
 const form = document.querySelector("#registrationForm");
 const formError = document.querySelector("#formError");
+const consentModal = document.querySelector("#consentModal");
+const privacyConsent = document.querySelector("#privacyConsent");
+const marketingConsent = document.querySelector("#marketingConsent");
+const consentError = document.querySelector("#consentError");
+const acceptConsent = document.querySelector("#acceptConsent");
 const storageKey = "sesderma_registros";
 const submitButton = form.querySelector('[type="submit"]');
+const privacyNoticeVersion = "sesderma-event-2026-06-27";
+
+let consentAccepted = false;
+let consentAcceptedAt = "";
 
 const hasFirebaseConfig = Object.values(firebaseConfig).every(Boolean);
 const db = hasFirebaseConfig ? getFirestore(initializeApp(firebaseConfig)) : null;
@@ -22,6 +31,20 @@ function showScreen(name) {
   });
 
   window.scrollTo({ top: 0, behavior: "instant" });
+
+  if (name === "form" && !consentAccepted) {
+    openConsentModal();
+  }
+}
+
+function openConsentModal() {
+  consentModal.hidden = false;
+  document.body.classList.add("modal-open");
+}
+
+function closeConsentModal() {
+  consentModal.hidden = true;
+  document.body.classList.remove("modal-open");
 }
 
 function saveLocalRegistration(data) {
@@ -33,6 +56,10 @@ function saveLocalRegistration(data) {
 async function saveRegistration(data) {
   const payload = {
     ...data,
+    privacyConsent: consentAccepted,
+    marketingConsent: marketingConsent.checked,
+    consentAcceptedAt,
+    privacyNoticeVersion,
     registeredAt: new Date().toISOString(),
     source: "landing-sesderma",
   };
@@ -91,8 +118,31 @@ document.addEventListener("click", (event) => {
   showScreen(trigger.dataset.go);
 });
 
+acceptConsent.addEventListener("click", () => {
+  if (!privacyConsent.checked) {
+    consentError.textContent = "Debes aceptar el uso de datos para continuar con el registro.";
+    return;
+  }
+
+  consentAccepted = true;
+  consentAcceptedAt = new Date().toISOString();
+  consentError.textContent = "";
+  closeConsentModal();
+});
+
+privacyConsent.addEventListener("change", () => {
+  if (privacyConsent.checked) {
+    consentError.textContent = "";
+  }
+});
+
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
+
+  if (!consentAccepted) {
+    openConsentModal();
+    return;
+  }
 
   if (!validateForm()) return;
 
@@ -104,7 +154,10 @@ form.addEventListener("submit", async (event) => {
     showScreen("thanks");
   } catch (error) {
     console.error(error);
-    formError.textContent = "No pudimos guardar el registro. Intenta de nuevo.";
+    formError.textContent =
+      error.code === "permission-denied"
+        ? "Falta actualizar permisos de registro. Intenta de nuevo mas tarde."
+        : "No pudimos guardar el registro. Intenta de nuevo.";
   } finally {
     submitButton.disabled = false;
   }
